@@ -77,6 +77,24 @@ The tests cover dangerous URL schemes, chronological sorting, nonmutation, servi
 
 ## Static deployment
 
+### GitHub Pages (automatic deployment)
+
+`.github/workflows/deploy.yml` installs locked dependencies with `npm ci`, runs the tests, builds the site with Node.js 24, and deploys only `dist/` on every push to `main`. A local commit alone does not trigger deployment; push it to GitHub. You can also run **Deploy website to GitHub Pages** manually from the Actions tab on `main`.
+
+One-time setup in `fotisbalis/mygym_website`:
+
+1. Open **Settings → Pages → Build and deployment → Source** and select **GitHub Actions**.
+2. Confirm your existing domain is listed under **Custom domain** for this repository. Domain configuration belongs to the repository's Pages settings; this workflow does not change DNS or the domain. Custom Actions deployments do not require a `CNAME` file.
+3. Commit and push the workflow and source files to `main`. Follow the run under **Actions**; a successful deployment includes the live site URL.
+
+The workflow reads the configured Pages base path and passes it to Vite, supporting both a custom domain and the default repository subdirectory URL. No personal access token or additional deployment secrets are required; it uses GitHub's built-in token and Pages environment. Tests or build failures stop deployment.
+
+Keep editable images and PDFs in the source assets folders, never in `dist/`: Vite regenerates `dist` during each build. Only files included by the build reach the published site; a PDF placed in the repository root is not automatically published.
+
+References: [Vite deployment guide](https://vite.dev/guide/static-deploy#github-pages), [GitHub Pages workflows](https://docs.github.com/en/pages/getting-started-with-github-pages/using-custom-workflows-with-github-pages).
+
+### Other static hosts
+
 For Cloudflare Pages or another static host:
 
 - Build command: `npm run build`
